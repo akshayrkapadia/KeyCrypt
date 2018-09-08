@@ -1,0 +1,6 @@
+README.md
+setup.py
+KeyCrypt.egg-info/PKG-INFO
+KeyCrypt.egg-info/SOURCES.txt
+KeyCrypt.egg-info/dependency_links.txt
+KeyCrypt.egg-info/top_level.txt

@@ -1,0 +1,47 @@
+Metadata-Version: 2.1
+Name: KeyCrypt
+Version: 1.0.0
+Summary: Secure Password Manager With GPG Encryption
+Home-page: https://gitlab.com/akshayrkapadia/KeyCrypt
+Author: Akshay R. Kapadia
+Author-email: akshayrkapadia@tutamail.com
+License: UNKNOWN
+Description: # KeyCrypt
+        
+        * Copyright 2018, Akshay R. Kapadia
+        * License: GPL-3.0
+        * Version: 1.0.0
+        * Status: Development
+        
+        ---
+        
+        ## Features
+        1. GNU Privacy Guard encryption
+        2. Data stored locally on your computer
+        3. Automatic login using the selenium webdriver (Requires a working url and html id information for the website)
+        4. Automatically checks haveibeenpwned.com to see if your account has been breached or your password has been pwned
+        5. Tests password strength by calculating the entropy value of the password
+        6. Can work in restricted mode if there is no wifi available
+        
+        ---
+        
+        ## Commands
+        
+        1. **add** {name} - add a new account to the keycrypt
+        2. **delete** {name} - delete an account from the keycrypt
+        3. **edit** {name} - edit an existing account in the keycrypt
+        4. **find** {name} - find an account stored in the keycrypt
+        5. **see** {category} - see all the accounts in a specific category
+        7. **login** {name} - automatically open a web browser and log into the website
+        8. **backup** {path} - backs up data to the specified directory
+        9. **restore** {path} - restores data from the specified directory
+        
+        ---
+        
+        All Breach Data Is From haveibeenpwned.com
+        
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Operating System :: POSIX :: Linux
+Description-Content-Type: text/markdown
