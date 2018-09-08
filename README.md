@@ -1,5 +1,7 @@
 # KeyCrypt
 
+![KeyCrypt Screenshot](https://github.com/AkshayRKapadia/KeyCrypt-CLI/keycrypt_screenshot.png)
+
 * Copyright 2018, Akshay R. Kapadia
 * License: GPL-3.0
 * Version: 1.0.0
