@@ -12,15 +12,6 @@ from termcolor import colored
 from exceptions import *
 
 
-__author__ = "Akshay R. Kapadia"
-__copyright__ = "Copyright 2018, Akshay R. Kapadia"
-__license__ = "GPL"
-__version__ = "1.0.0"
-__maintainer__ = "Akshay R. Kapadia"
-__email__ = "akshayrkapadia@tutamail.com"
-__status__ = "Development"
-
-
 class KeyCrypt:
     def __init__(self, path=None):
         try:
