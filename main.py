@@ -1,17 +1,10 @@
 #!/usr/bin/env python
 
-import math
-import pickle
-import string
-import random
 import getpass
 import argparse
-import requests
 import tkinter as tk
-from os.path import isdir
 from os.path import isfile
 from fuzzywuzzy import fuzz
-from shutil import copyfile
 from subprocess import call
 from termcolor import colored
 from tkinter.filedialog import askdirectory

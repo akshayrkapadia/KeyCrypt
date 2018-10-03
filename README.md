@@ -1,12 +1,14 @@
 # KeyCrypt
 
-![KeyCrypt Screenshot](/keycrypt_screenshot.png)
+![KeyCrypt Screenshot](/images/icon.png)
 
 * Copyright 2018, Akshay R. Kapadia
 * License: GPL-3.0
 * Version: 1.0.0
 * Status: Development
 
+---
+![KeyCrypt Screenshot](/images/keycrypt_screenshot.png)
 ---
 
 ## Features
