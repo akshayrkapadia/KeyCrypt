@@ -1,6 +1,7 @@
-# KeyCrypt
-
 ![KeyCrypt Screenshot](/images/icon.png)
+
+# KeyCrypt
+Encrypted Password Manager
 
 * Copyright 2018, Akshay R. Kapadia
 * License: GPL-3.0
