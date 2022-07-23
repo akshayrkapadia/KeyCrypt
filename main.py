@@ -128,6 +128,7 @@ def main():
                 if ((len(path) > 0) and (path[-1] != "/")):
                     path += "/"
                 if not isdir(path):
+                    print(path)
                     raise PathNotFoundError
                 else:
                     keycrypt.backup(path)
@@ -144,34 +145,27 @@ def main():
                         for account in keycrypt.accounts:
                             account.show_account(keycrypt.wifi_permission)
                     elif args["command"] == "restore":
-                        print("restore argparse")
                         path = args["path"]
                         if ((len(path) > 0) and (path[-1] != "/")):
                             path += "/"
-                        print(path)
                         if not isfile(path + "KeyCryptDataBackup.txt.gpg"):
-                            print("no file")
                             raise FileNotFoundError
                         else:
-                            print("enter else")
                             if isfile(".KeyCryptData.txt"):
                                 delete = False
                                 if args["delete"]:
                                     delete = True
                                 if args["merge"]:
-                                    print("merging")
                                     keycrypt.merge(path, delete)
                                 else:
                                     merge = True if (
                                         str(input("Data Already Exists. Merge? (y/N): ")).lower() in ["y", "yes"]) else False
-                                    print(merge)
                                     if merge:
                                         keycrypt.merge(path, delete)
                                     else:
                                         copyfile(path + "KeyCryptDataBackup.txt.gpg", ".KeyCryptData.txt.gpg")
                                         keycrypt = KeyCrypt()
                             else:
-                                print("no file else")
                                 copyfile(path + "KeyCryptDataBackup.txt.gpg", ".KeyCryptData.txt.gpg")
                                 keycrypt = KeyCrypt()
                             print(colored("KeyCrypt Successfully Restored", "green"))

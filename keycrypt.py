@@ -18,11 +18,8 @@ class KeyCrypt:
             filename = "KeyCryptDataBackup.txt" if restore else ".KeyCryptData.txt"
             if path != None:
                 filename = path + filename
-            print(filename)
             if isfile(filename+".gpg"):  # Checks to see if the file exists
-                print("decrpyting")
                 self.decrypt(filename)
-                print("done dec")
                 with open(filename, "rb") as data_file:
                     keycrypt_data = pickle.load(data_file)
                     # Loads the keycrypt_data into the current instance of KeyCrypt
@@ -121,12 +118,9 @@ class KeyCrypt:
 
     # Restores and merges data from the KeyCryptDataBackup.txt.gpg file in the specified path
     def merge(self, path, delete=False):
-        print("entered restore")
         target = KeyCrypt(path, True)
-        print("target made")
         print(len(target.accounts))
         for target_account in target.accounts:
-            print(target_account.name)
             duplicate = False
             for account in self.accounts:
                 if target_account.equals(account):
