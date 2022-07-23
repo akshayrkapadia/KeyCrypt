@@ -14,9 +14,9 @@ from keycrypt import *
 
 
 __author__ = "Akshay R. Kapadia"
-__copyright__ = "Copyright 2018, Akshay R. Kapadia"
+__copyright__ = "Copyright 2022, Akshay R. Kapadia"
 __license__ = "GPL"
-__version__ = "1.0.0"
+__version__ = "0.2.0"
 __maintainer__ = "Akshay R. Kapadia"
 __status__ = "Development"
 

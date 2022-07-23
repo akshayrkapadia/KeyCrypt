@@ -3,9 +3,9 @@
 # KeyCrypt
 Encrypted Password Manager
 
-* Copyright 2018, Akshay R. Kapadia
+* Copyright 2022, Akshay R. Kapadia
 * License: GPL-3.0
-* Version: 1.0.0
+* Version: 0.2.0
 * Status: Development
 
 ---
@@ -41,10 +41,10 @@ Encrypted Password Manager
 
 7. **login** {name} - automatically open a web browser and log into the website
 
-8. **backup** {path} - backs up data to the specified directory
+8. **backup** {path} - backs up data to the specified directory (absolute path)
   * *-d, --delete* - deletes the original copy of the data
 
-9. **restore** {path} - restores data from the specified directory
+9. **restore** {path} - restores data from the specified directory (absolute path)
   * *-d, --delete* - deletes the original copy of the data
   * *-m --merge* - merges current KeyCrypt data with another backup of the data
 
