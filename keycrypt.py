@@ -13,20 +13,28 @@ from exceptions import *
 
 
 class KeyCrypt:
-    def __init__(self, path=None):
+    def __init__(self, path="", restore=False):
         try:
-            if path is not None:
-                # Restores data file from the given path
-                KeyCrypt.restore(path)
-            if isfile(".KeyCryptData.txt.gpg"):  # Checks to see if the file exists
-                self.decrypt()
-            with open(r".KeyCryptData.txt", "rb") as data_file:
-                keycrypt_data = pickle.load(data_file)
-                # Loads the keycrypt_data into the current instance of KeyCrypt
-                self.accounts = keycrypt_data["Accounts"]
-                self.gpg_name = keycrypt_data["GPG Name"]
-                self.wifi_permission = keycrypt_data["Wifi Permission"]
-                self.passwords_visible = keycrypt_data["Passwords Visible"]
+            filename = "KeyCryptDataBackup.txt" if restore else ".KeyCryptData.txt"
+            if path != None:
+                filename = path + filename
+            print(filename)
+            if isfile(filename+".gpg"):  # Checks to see if the file exists
+                print("decrpyting")
+                self.decrypt(filename)
+                print("done dec")
+                with open(filename, "rb") as data_file:
+                    keycrypt_data = pickle.load(data_file)
+                    # Loads the keycrypt_data into the current instance of KeyCrypt
+                    self.accounts = keycrypt_data["Accounts"]
+                    self.gpg_name = keycrypt_data["GPG Name"]
+                    self.wifi_permission = keycrypt_data["Wifi Permission"]
+                    self.passwords_visible = keycrypt_data["Passwords Visible"]
+            else:
+                self.gpg_name = None
+                self.accounts = []
+                self.wifi_permission = True
+                self.passwords_visible = False
         except IOError:
             self.gpg_name = None
             self.accounts = []
@@ -68,51 +76,72 @@ class KeyCrypt:
     # Encrypts the ".KeyCryptData.txt" file to ".KeyCryptData.txt.gpg"
     # Destroys the leftover file
 
-    def encrypt(self):
-        call(["gpg", "-e", "-r", str(self.gpg_name), ".KeyCryptData.txt"])
-        call(["shred", "-u", ".KeyCryptData.txt"])
+    def encrypt(self, filename):
+        call(["gpg", "-e", "-r", str(self.gpg_name), filename])
+        call(["shred", "-u", filename])
 
     # Decrypts the ".KeyCryptData.txt.gpg" file to ".KeyCryptData.txt"
     # Destroys the leftover file
-    def decrypt(self):
-        call(["gpg", "-d", "-o", ".KeyCryptData.txt", ".KeyCryptData.txt.gpg"])
-        if isfile(".KeyCryptData.txt"):
-            call(["shred", "-u", ".KeyCryptData.txt.gpg"])
+    def decrypt(self, filename):
+        call(["gpg", "-d", "-o", filename, filename + ".gpg"])
+        if isfile(filename):
+            call(["shred", "-u", filename + ".gpg"])
         else:
             raise GPGError
 
     # Stores the KeyCrypt and name global variables in a dictionary.
     # Serializes the dictionary to ".KeyCryptData.txt" and encrypts the file
-    def save(self):
-        if not isfile(".KeyCryptData.txt.gpg"):
+    def save(self, filename=".KeyCryptData.txt"):
+        if not isfile(filename + ".gpg"):
             data = {"Accounts": self.accounts, "GPG Name": self.gpg_name,
                     "Wifi Permission": self.wifi_permission, "Passwords Visible": self.passwords_visible}
-            with open(r".KeyCryptData.txt", "wb") as data_file:
+            with open(filename, "wb") as data_file:
                 pickle.dump(data, data_file)
-            self.encrypt()
+            self.encrypt(filename)
 
     # Backup .KeyCryptData.txt.gpg to the specified destination
     def backup(self, path):
         if isfile(".KeyCryptData.txt"):
-            self.encrypt()
-        if isdir(path):
-            copyfile(".KeyCryptData.txt.gpg", path +
-                     "/KeyCryptDataBackup.txt.gpg")
+            self.encrypt(".KeyCryptData.txt")
         else:
             raise FileNotFoundError
+        if isdir(path):
+            copyfile(".KeyCryptData.txt.gpg", path +
+                     "KeyCryptDataBackup.txt.gpg")
+        else:
+            raise PathNotFoundError
+
+    # Restores data from the .KeyCryptData.txt.gpg file in the specified path
+    def restore(path):
+        if isdir(path):
+            copyfile(path + "KeyCryptDataBackup.txt.gpg",
+                     ".KeyCryptData.txt.gpg")
+        else:
+            raise PathNotFoundError
+
+    # Restores and merges data from the KeyCryptDataBackup.txt.gpg file in the specified path
+    def merge(self, path, delete=False):
+        print("entered restore")
+        target = KeyCrypt(path, True)
+        print("target made")
+        print(len(target.accounts))
+        for target_account in target.accounts:
+            print(target_account.name)
+            duplicate = False
+            for account in self.accounts:
+                if target_account.equals(account):
+                    duplicate = True
+            if not duplicate:
+                self.add_account(target_account)
+        if delete:
+            call(["shred", "-u", path + "KeyCryptDataBackup.txt"])
+        else:
+            target.encrypt(path + "KeyCryptDataBackup.txt")
 
     # Updates all the security status for all the accounts
     def update(keycrypt):
         for account in keycrypt.accounts:
             account.update_security_status(keycrypt)
-
-    # Restores data from the .KeyCryptData.txt.gpg file in the specified path
-    def restore(path):
-        if isdir(path):
-            copyfile(path + "/KeyCryptDataBackup.txt.gpg",
-                     ".KeyCryptData.txt.gpg")
-        else:
-            raise FileNotFoundError
 
     # Tests password strength based on length and alphabet
     def check_password_strength(password):

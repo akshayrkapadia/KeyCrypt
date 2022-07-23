@@ -103,7 +103,6 @@ class Account:
             print("  Password Strength: " +
                   colored(self.password_strength, "red"))
         if self.url != "":
-            unetbootin
             print("  Url: " + colored(self.url, "blue"))
         print("  Category: " + colored(self.category, "blue"))
         print("  Date Modified: " + colored(str(self.date_modified), "blue"))

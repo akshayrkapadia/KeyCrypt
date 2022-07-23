@@ -2,12 +2,11 @@
 
 import getpass
 import argparse
-import tkinter as tk
 from os.path import isfile
 from fuzzywuzzy import fuzz
 from subprocess import call
 from termcolor import colored
-from tkinter.filedialog import askdirectory
+from shutil import copyfile
 from selenium.common.exceptions import WebDriverException
 from exceptions import *
 from account import *
@@ -19,7 +18,6 @@ __copyright__ = "Copyright 2018, Akshay R. Kapadia"
 __license__ = "GPL"
 __version__ = "1.0.0"
 __maintainer__ = "Akshay R. Kapadia"
-__email__ = "akshayrkapadia@tutamail.com"
 __status__ = "Development"
 
 
@@ -127,15 +125,14 @@ def main():
                                     ) if keycrypt.gpg_name is None else keycrypt.gpg_name
             if args["command"] == "backup":
                 path = args["path"]
-                if path == "?":
-                    tk.Tk().withdraw()
-                    path = askdirectory()
-                if path == "":
-                    raise tk.TclError
+                if ((len(path) > 0) and (path[-1] != "/")):
+                    path += "/"
+                if not isdir(path):
+                    raise PathNotFoundError
                 else:
                     keycrypt.backup(path)
                     if args["delete"]:
-                        call(["shred", "-u", ".KeyCryptData.txt"])
+                        call(["shred", "-u", ".KeyCryptData.txt.gpg"])
                     else:
                         keycrypt.save()
                 print(colored("KeyCrypt Successfully Backed Up", "green"))
@@ -147,28 +144,36 @@ def main():
                         for account in keycrypt.accounts:
                             account.show_account(keycrypt.wifi_permission)
                     elif args["command"] == "restore":
+                        print("restore argparse")
                         path = args["path"]
-                        if path == "?":
-                            tk.Tk().withdraw()
-                            path = askdirectory()
-                        if path == "":
-                            raise tk.TclError
+                        if ((len(path) > 0) and (path[-1] != "/")):
+                            path += "/"
+                        print(path)
+                        if not isfile(path + "KeyCryptDataBackup.txt.gpg"):
+                            print("no file")
+                            raise FileNotFoundError
                         else:
-                            if args["merge"]:
-                                old_accounts = keycrypt.accounts
-                                keycrypt = KeyCrypt(path)
-                                for account_x in old_accounts:
-                                    duplicate = False
-                                    for account_y in keycrypt.accounts:
-                                        if account_x.equals(account_y):
-                                            duplicate = True
-                                    if not duplicate:
-                                        keycrypt.add_account(account_x)
+                            print("enter else")
+                            if isfile(".KeyCryptData.txt"):
+                                delete = False
+                                if args["delete"]:
+                                    delete = True
+                                if args["merge"]:
+                                    print("merging")
+                                    keycrypt.merge(path, delete)
+                                else:
+                                    merge = True if (
+                                        str(input("Data Already Exists. Merge? (y/N): ")).lower() in ["y", "yes"]) else False
+                                    print(merge)
+                                    if merge:
+                                        keycrypt.merge(path, delete)
+                                    else:
+                                        copyfile(path + "KeyCryptDataBackup.txt.gpg", ".KeyCryptData.txt.gpg")
+                                        keycrypt = KeyCrypt()
                             else:
-                                keycrypt = KeyCrypt(path)
-                            if args["delete"]:
-                                call(["shred", "-u", path +
-                                      "/KeyCryptDataBackup.txt.gpg"])
+                                print("no file else")
+                                copyfile(path + "KeyCryptDataBackup.txt.gpg", ".KeyCryptData.txt.gpg")
+                                keycrypt = KeyCrypt()
                             print(colored("KeyCrypt Successfully Restored", "green"))
                     elif args["command"] == "settings":
                         print(colored("Settings", "red"))
@@ -329,10 +334,10 @@ def main():
                     print(colored("Invalid Setting", "red"))
                     print(
                         colored("Settings: GPG Name, Wifi Permission, Passwords Visible", "red"))
-                except tk.TclError:
-                    print(colored("Invalid Directory", "red"))
                 except NoInternetError:
                     print(colored("No Internet Connection", "red"))
+                except PathNotFoundError:
+                    print(colored("Invalid Directory", "red"))
                 except WebDriverException:
                     if "gecko" in str(WebDriverException):
                         print(colored("'geckodriver' Not Installed", "red"))

@@ -27,3 +27,6 @@ class NoInternetError(Exception):
 
 class InvalidSettingError(Exception):
     pass
+
+class PathNotFoundError(Exception):
+    pass
