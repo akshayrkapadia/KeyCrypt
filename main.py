@@ -21,9 +21,9 @@ __maintainer__ = "Akshay R. Kapadia"
 __status__ = "Development"
 
 
-class GUI():
-    def start(self):
-        pass
+# class GUI():
+#     def start(self):
+#         pass
 
 
 def banner():

@@ -39,7 +39,7 @@ class Account:
         print(colored("Gathering Website Data...", "red"))
         options = Options()
         options.add_argument("--headless")
-        browser = webdriver.Firefox(firefox_options=options)
+        browser = webdriver.Chrome(chrome_options=options)
         browser.implicitly_wait(15)
         browser.get(self.url)
         elements = browser.find_elements_by_xpath("//*[@id]")
