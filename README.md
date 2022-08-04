@@ -1,25 +1,26 @@
-![KeyCrypt Screenshot](/images/icon.png)
+![KeyCrypt Screenshot](./images/icon.png)
 
 # KeyCrypt
 Encrypted Password Manager
 
-* Copyright 2022, Akshay R. Kapadia
-* License: GPL-3.0
-* Version: 0.2.0
-* Status: Development
+---
+
+Copyright 2022, Akshay R. Kapadia<br>
+License: GPL-3.0<br>
+Version: 0.2.0<br>
+Status: Development<br>
 
 ---
-![KeyCrypt Screenshot](/images/keycrypt_screenshot.png)
+![KeyCrypt Screenshot](./images/screenshot.png)
 ---
 
 ## Features
 1. GNU Privacy Guard encryption
 2. Encrypted data stored locally on your computer
-3. Automatic login using the selenium webdriver (Requires a working url and html id information for the website)
-4. Automatically checks haveibeenpwned.com to see if your account has been breached or your password has been pwned
-5. Tests password strength by calculating the entropy value of the password
-6. Gives warning if password is about to expire, is not strong enough, or is reused for other accounts
-7. Can work in restricted mode if there is no wifi available or wifi permission is denied
+3. Automatically checks haveibeenpwned.com to see if your account has been breached or your password has been pwned
+4. Tests password strength by calculating the entropy value of the password
+5. Gives warning if password is about to expire, is not strong enough, or is reused for other accounts
+6. Can work in restricted mode if there is no wifi available or wifi permission is denied
 
 ---
 
@@ -39,18 +40,16 @@ Encrypted Password Manager
 5. **see** {category} - see all the accounts in a specific category
   * *-pv, --password-visible* - makes the password visible when the account data is shown
 
-7. **login** {name} - automatically open a web browser and log into the website
-
-8. **backup** {path} - backs up data to the specified directory (absolute path)
+6. **backup** {path} - backs up data to the specified directory (absolute path)
   * *-d, --delete* - deletes the original copy of the data
 
-9. **restore** {path} - restores data from the specified directory (absolute path)
+7. **restore** {path} - restores data from the specified directory (absolute path)
   * *-d, --delete* - deletes the original copy of the data
   * *-m --merge* - merges current KeyCrypt data with another backup of the data
 
-10. **settings** - Can revoke wifi permission and set default password visibility
+8. **settings** - Can revoke wifi permission and set default password visibility
 
-11. **nuke** - permanently erases all keycrpyt data from the computer
+9. **nuke** - permanently erases all keycrpyt data from the computer
 
 
 

@@ -7,7 +7,6 @@ from fuzzywuzzy import fuzz
 from subprocess import call
 from termcolor import colored
 from shutil import copyfile
-from selenium.common.exceptions import WebDriverException
 from exceptions import *
 from account import *
 from keycrypt import *
@@ -53,7 +52,6 @@ def main():
     delete_subparser = subparsers.add_parser("delete")
     edit_subparser = subparsers.add_parser("edit")
     find_subparser = subparsers.add_parser("find")
-    login_subparser = subparsers.add_parser("login")
     see_subparser = subparsers.add_parser("see")
     backup_subparser = subparsers.add_parser("backup")
     restore_subparser = subparsers.add_parser("restore")
@@ -77,9 +75,6 @@ def main():
     find_subparser.add_argument("name", help="Name of the account", type=str)
     find_subparser.add_argument("-pv", "--password-visible",
                                 help="Makes the password visible with the account data is shown", action="store_true")
-
-    # Autologin parser
-    login_subparser.add_argument("name", help="Name of the account", type=str)
 
     # See category parser
     see_subparser.add_argument(
@@ -172,10 +167,10 @@ def main():
                     elif args["command"] == "settings":
                         print(colored("Settings", "red"))
                         if keycrypt.wifi_permission:
-                            print("Wifi Permission (Security Status & Autologin): " +
+                            print("Wifi Permission for Security Status: " +
                                   colored(keycrypt.wifi_permission, "green"))
                         else:
-                            print("Wifi Permission (Security Status & Autologin): " +
+                            print("Wifi Permission Security Status ): " +
                                   colored(keycrypt.wifi_permission, "red"))
                         if keycrypt.passwords_visible:
                             print("Passwords Visible: " +
@@ -192,10 +187,10 @@ def main():
                         if setting == "Wifi Permission":
                             keycrypt.wifi_permission = not keycrypt.wifi_permission
                             if keycrypt.wifi_permission:
-                                print("Wifi Permission (Security Status & Autologin): " +
+                                print("Wifi Permission for Security Status: " +
                                       colored(keycrypt.wifi_permission, "green"))
                             else:
-                                print("Wifi Permission (Security Status & Autologin): " +
+                                print("Wifi Permission for Security Status: " +
                                       colored(keycrypt.wifi_permission, "red"))
                         else:
                             keycrypt.passwords_visible = not keycrypt.passwords_visible
@@ -217,25 +212,13 @@ def main():
                         if category not in ["Email", "Web", "Social", "Banking", "Computer", "Other"]:
                             raise InvalidCategoryError
                         url = str(
-                            input("Url (Use Login Page For Autologin)(Start With 'https://'): "))
+                            input("Url: "))
                         account = Account(args["name"], username, password, url,
                                           category, keycrypt)
                         keycrypt.add_account(account)
                         account.show_account(False)
                         print(
                             colored(args["name"] + " Account Successfully Created", "green"))
-                        autologin = False if (
-                            str(input("Configure Autologin (Y/n): ")) in ["n", "no"]) else True
-                        if autologin:
-                            if KeyCrypt.wifi_enabled(keycrypt.wifi_permission):
-                                account.configure_autologin()
-                            else:
-                                account.autologin = False
-                                raise NoInternetError
-                        if (account.username_id is None or account.password_id is None):
-                            account.autologin = False
-                        else:
-                            account.autologin = True
                     elif args["command"] == "see":
                         if keycrypt.passwords_visible:
                             args["password_visible"] = True
@@ -285,10 +268,10 @@ def main():
                                 keycrypt.wifi_permission, args["password_visible"])
                             attribute = str(input("Attribute: ")
                                             ).lower().capitalize()
-                            for defined_attribute in ["Name", "Username", "Password", "Url", "Category", "Autologin"]:
+                            for defined_attribute in ["Name", "Username", "Password", "Url", "Category"]:
                                 if fuzz.ratio(attribute, defined_attribute) >= 70:
                                     attribute = defined_attribute
-                            if attribute not in ["Name", "Username", "Password", "Url", "Category", "Autologin"]:
+                            if attribute not in ["Name", "Username", "Password", "Url", "Category"]:
                                 raise InvalidAttributeError
                             account.edit_account(attribute, keycrypt)
                             account.update_security_status(keycrypt)
@@ -296,19 +279,6 @@ def main():
                                 keycrypt.wifi_permission, args["password_visible"])
                             print(
                                 colored(attribute + " Successfully Edited", "green"))
-                        elif args["command"] == "login":
-                            if KeyCrypt.wifi_enabled(keycrypt.wifi_permission):
-                                if (account.autologin and account.username_id is not None and account.password_id is not None):
-                                    print(colored("Logging Into Your " +
-                                                  account.name + " Account...", "red"))
-                                    account.login()
-                                    print(
-                                        colored("Successfully Entered Login Information", "green"))
-                                else:
-                                    raise AccountNotConfiguredError(
-                                        "Account Is Not Configured For Autologin", account)
-                            else:
-                                raise NoInternetError
                         elif args["command"] == "find":
                             if keycrypt.passwords_visible:
                                 args["password_visible"] = True
