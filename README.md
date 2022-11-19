@@ -55,4 +55,4 @@ Status: Development<br>
 
 ---
 
-All Breach Data Is From haveibeenpwned.com
+All Breach Data Is From haveibeenpwned.com [DEPRACATED]
